@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h1>Customer Details</h1>
+
+    <a href="javascript:history.back()">⬅️ Back</a>
+    |
+    <a href="{% url 'banking:employee/accounts' customer.pk %}">Accounts</a>
+    |
+    <a href="{% url 'banking:employee/loans' customer.pk %}">Loans</a>
+    |
+    <a href="{% url 'banking:employee/loan_applications' customer.pk %}">Loan Applications</a>
+    <hr>
+
+    <h2>Customer Details</h2>
+
+    <div>First Name: <b>{{ customer.user.first_name }}</b></div>
+    <div>Last Name: <b>{{ customer.user.last_name }}</b></div>
+    <div>Email: <b>{{ customer.user.email }}</b></div>
+    <div>Phone: <b>{{ customer.phone }}</b></div>
+    <div id="customer_rank">Customer Rank: {{ customer.customer_rank.name }}</div>
+
+    <br>
+    <label><i>Change Customer Rank</i></label>
+    <select 
+        name="rank"
+        hx-patch="{% url 'banking:employee/customer' customer.pk %}"
+        hx-trigger="change"
+        hx-target="#customer_rank"
+    >
+        <option value="" selected disabled hidden>-</option>
+        {% for rank in ranks %}
+            <option value="{{rank.name}}">{{rank.name}}</option>
+        {% endfor %}
+    </select>
+{% endblock %}

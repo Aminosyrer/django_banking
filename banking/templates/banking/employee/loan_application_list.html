@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+
+{% block main %}
+
+    <h1>Loan Applications
+        <span
+            onclick="document.querySelector('dialog').showModal()"
+            style="cursor: pointer;"
+        >+</span>
+    </h1>
+
+    <a href="javascript:history.back()">⬅️ Back</a>
+
+    <dialog>
+        <header>Apply for a new loan</header>
+
+        <form method="POST" action="{% url 'banking:customer/loan_applications' customer.pk %}">
+            {% csrf_token %}
+            {{ loan_form.as_p }}
+            <br>
+            <menu>
+                <button>Submit</button>
+                <span style="cursor: pointer;" onclick="document.querySelector('dialog').close()">Cancel</span>
+            </menu>
+        </form>
+    </dialog>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Account ($)</th>
+                <th>Amount</th>
+                <th>Status</th>
+                {% if request.user|in_group:"Employee" or request.user.is_superuser %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan_application in loan_applications %}
+                <tr>
+                    <td>{{ loan_application.account.name }}</td>
+                    <td>{{ loan_application.amount }}</td>
+                    <td>{{ loan_application.status }}</td>
+                    {% if request.user|in_group:"Employee" and loan_application.status == 'pending' %}
+                        <td>
+                            <form hx-patch="{% url 'banking:employee/loan_application' customer.pk loan_application.pk %}" hx-target="body">
+                                <input type="hidden" name="status" value="approved_employee">
+                                <button type="submit">Approve (Employee)</button>
+                            </form>
+                        </td>
+                    {% elif request.user.is_superuser and loan_application.status == 'approved_employee' %}
+                        <td>
+                            <form hx-patch="{% url 'banking:employee/loan_application' customer.pk loan_application.pk %}" hx-target="body">
+                                <input type="hidden" name="status" value="approved">
+                                <button type="submit">Approve (Supervisor)</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>    
+    </table>
+
+{% endblock %}

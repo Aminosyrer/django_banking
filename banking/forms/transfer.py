@@ -1,5 +1,6 @@
 from django import forms
 from banking.models.account import Account
+from django.db.models import Q
 
 class TransferForm(forms.Form):
     from_account = forms.ModelChoiceField(queryset=Account.objects.all(), label='From Account')
@@ -11,3 +12,4 @@ class TransferForm(forms.Form):
         super(TransferForm, self).__init__(*args, **kwargs)
         if customer:
             self.fields['from_account'].queryset = Account.objects.filter(customer=customer)
+            self.fields['to_account'].queryset = Account.objects.filter(~Q(customer=customer))

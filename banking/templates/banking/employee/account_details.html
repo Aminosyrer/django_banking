@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block main %}
     <h1>{{ account.name }}</h1>
 
@@ -38,4 +37,5 @@
         </tbody>
     </table>
 
+    <a href="{% url 'banking:transfer' customer.pk %}">Transfer Money</a>
 {% endblock %}

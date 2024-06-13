@@ -21,8 +21,9 @@ def generate_balance(accounts):
             account.balance = 0
         else:
             account.balance = balance
-        account.balance = '{0:.2f}'.format(account.balance)
+        account.balance = float(account.balance)
     return accounts
+
 
 def append_counterpart(movements):
     for movement in movements:

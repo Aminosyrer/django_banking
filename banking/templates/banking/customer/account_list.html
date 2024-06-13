@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block main %}
-
     <h1>Accounts</h1>
     <a href="javascript:history.back()">⬅️ back</a>
 
@@ -13,6 +12,7 @@
                 <th>Type</th>
                 <th>Interest Rate</th>
                 <th>Created Date</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -20,9 +20,12 @@
                 <tr>
                     <td><a href="{% url 'banking:customer/account' customer.pk account.pk %}"> {{account.name}} </a></td>
                     <td>{{account.balance}}</td>
-                    <td>{{account.account_type.name}}
+                    <td>{{account.account_type.name}}</td>
                     <td>{{account.account_type.interest_rate}}%</td>
                     <td>{{account.created_at|date:'d-m-Y'}}</td>
+                    <td>
+                        <a href="{% url 'banking:transfer' customer.pk %}">Transfer</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -33,4 +36,3 @@
     {% endif %}
 
 {% endblock %}
-

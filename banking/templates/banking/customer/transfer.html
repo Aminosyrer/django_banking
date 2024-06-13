@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h1>Transfer Money</h1>
+    <form method="POST" action="{% url 'banking:transfer' customer.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Transfer</button>
+    </form>
+    <a href="{% url 'banking:customer/accounts' customer.pk %}">⬅️ Back to Accounts</a>
+{% endblock %}

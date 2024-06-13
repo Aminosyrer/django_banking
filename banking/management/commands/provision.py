@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 from banking.models.costumer_rank import Customer_rank  # Corrected import
 from banking.models.account_type import Account_type
+from banking.models.customer import Customer
 from decimal import Decimal
 
 class Command(BaseCommand):
@@ -36,14 +37,43 @@ class Command(BaseCommand):
             employee.save()
             employee.groups.add(employee_group)
 
-        # Create customers ranks if table is empty
+        # Create customer ranks if table is empty
         if not Customer_rank.objects.all():
-            Customer_rank.objects.create(name='Blue')
-            Customer_rank.objects.create(name='Silver')
-            Customer_rank.objects.create(name='Gold')
+            blue_rank = Customer_rank.objects.create(name='Blue')
+            silver_rank = Customer_rank.objects.create(name='Silver')
+            gold_rank = Customer_rank.objects.create(name='Gold')
+        else:
+            blue_rank = Customer_rank.objects.get(name='Blue')
+            silver_rank = Customer_rank.objects.get(name='Silver')
+            gold_rank = Customer_rank.objects.get(name='Gold')
 
         # Create account types if table is empty
         if not Account_type.objects.all():
             Account_type.objects.create(name='Regular', interest_rate=Decimal(2.10))
             Account_type.objects.create(name='Savings', interest_rate=Decimal(5.75))
             Account_type.objects.create(name='Loan', interest_rate=Decimal(12.32))
+
+        # Create users with different ranks
+        users_data = [
+            {'username': 'blueuser', 'password': '123456', 'first_name': 'Blue', 'last_name': 'User', 'email': 'blueuser@example.com', 'rank': blue_rank},
+            {'username': 'silveruser', 'password': '123456', 'first_name': 'Silver', 'last_name': 'User', 'email': 'silveruser@example.com', 'rank': silver_rank},
+            {'username': 'golduser', 'password': '123456', 'first_name': 'Gold', 'last_name': 'User', 'email': 'golduser@example.com', 'rank': gold_rank}
+        ]
+
+        for user_data in users_data:
+            user, created = User.objects.get_or_create(username=user_data['username'])
+            if created:
+                user.first_name = user_data['first_name']
+                user.last_name = user_data['last_name']
+                user.email = user_data['email']
+                user.password = make_password(user_data['password'])
+                user.save()
+
+                Customer.objects.get_or_create(
+                    user=user,
+                    customer_rank=user_data['rank'],
+                    first_name=user_data['first_name'],
+                    last_name=user_data['last_name'],
+                    email=user_data['email'],
+                    phone='1234567890'
+                )

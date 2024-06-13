@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, employee, customer
+from .views import index, employee, customer, transfer  # Import the transfer view
 
 app_name = 'banking'
 
@@ -20,4 +20,5 @@ urlpatterns = [
     path('employee/customers/<int:customer_pk>/accounts/<int:account_pk>', employee.account_details, name='employee/account'),
     path('employee/customers/<int:customer_pk>/loan_applications', employee.loan_application_list, name='employee/loan_applications'),
     path('employee/customers/<int:customer_pk>/loan_applications/<int:application_pk>', employee.loan_application_details, name='employee/loan_application'),
+    path('customers/<int:customer_pk>/transfer', transfer.transfer, name='transfer'),
 ]

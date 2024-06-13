@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
-from .costumer_rank import Customer_rank  # Ensure this import is correct
+from .costumer_rank import Customer_rank
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT)

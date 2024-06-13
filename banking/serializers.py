@@ -1,5 +1,3 @@
-# banking/serializers.py
-
 from rest_framework import serializers
 from django.urls import reverse
 from banking.models.customer import Customer

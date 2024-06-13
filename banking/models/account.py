@@ -13,15 +13,15 @@ class Account(models.Model):
         return self.name    
     
 class LoanApplication(models.Model):
-      customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='loan_applications')
-      amount = models.DecimalField(max_digits=10, decimal_places=2)
-      account = models.ForeignKey(Account, on_delete=models.PROTECT)
-      STATUS_CHOICES = (
-          ('pending', 'Pending Loan'),
-          ('approved', 'Approved Loan'),
-          ('approved_employee', 'Approved by Employee'),
-          ('denied', 'Denied Loan'),
-      )
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='loan_applications')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    STATUS_CHOICES = (
+        ('pending', 'Pending Loan'),
+        ('approved', 'Approved Loan'),
+        ('approved_employee', 'Approved by Employee'),
+        ('denied', 'Denied Loan'),
+    )
 
-      status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-      supervisor_approved = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    supervisor_approved = models.BooleanField(default=False)

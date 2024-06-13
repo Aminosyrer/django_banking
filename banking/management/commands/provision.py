@@ -1,14 +1,13 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
-from banking.models.costumer_rank import Customer_rank  # Corrected import
+from banking.models.costumer_rank import Customer_rank
 from banking.models.account_type import Account_type
 from banking.models.customer import Customer
 from decimal import Decimal
 
 class Command(BaseCommand):
     def handle(self, **options):
-        # Create admin if not exists and give staff and superuser permissions
         admin, created = User.objects.get_or_create(username='admin')
         if created:
             admin.is_staff = True
@@ -16,10 +15,8 @@ class Command(BaseCommand):
             admin.password = make_password('123456')
             admin.save()
 
-        # Create Employee group if not exists
         employee_group, created = Group.objects.get_or_create(name='Employee')
 
-        # Create a sample employee user and add to Employee group
         employee, created = User.objects.get_or_create(username='employee')
         if created:
             employee.is_staff = True
@@ -27,7 +24,6 @@ class Command(BaseCommand):
             employee.save()
             employee.groups.add(employee_group)
 
-        # Create customer ranks if table is empty
         if not Customer_rank.objects.all():
             blue_rank = Customer_rank.objects.create(name='Blue')
             silver_rank = Customer_rank.objects.create(name='Silver')
@@ -37,13 +33,11 @@ class Command(BaseCommand):
             silver_rank = Customer_rank.objects.get(name='Silver')
             gold_rank = Customer_rank.objects.get(name='Gold')
 
-        # Create account types if table is empty
         if not Account_type.objects.all():
             Account_type.objects.create(name='Regular', interest_rate=Decimal(2.10))
             Account_type.objects.create(name='Savings', interest_rate=Decimal(5.75))
             Account_type.objects.create(name='Loan', interest_rate=Decimal(12.32))
 
-        # Create users with different ranks
         users_data = [
             {'username': 'blueuser', 'password': '123456', 'first_name': 'Blue', 'last_name': 'User', 'email': 'blueuser@example.com', 'rank': blue_rank},
             {'username': 'silveruser', 'password': '123456', 'first_name': 'Silver', 'last_name': 'User', 'email': 'silveruser@example.com', 'rank': silver_rank},

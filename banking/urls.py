@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, employee, customer, transfer  # Import the transfer view
+from .views import index, employee, customer, transfer
 
 app_name = 'banking'
 

@@ -24,7 +24,6 @@ def generate_balance(accounts):
         account.balance = float(account.balance)
     return accounts
 
-
 def append_counterpart(movements):
     for movement in movements:
         counterpart = Ledger.objects.filter(~Q(account=movement.account), transaction=movement.transaction).select_related('account').first()

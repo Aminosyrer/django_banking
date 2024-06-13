@@ -16,18 +16,8 @@ class Command(BaseCommand):
             admin.password = make_password('123456')
             admin.save()
 
-        # Create supervisor if not exists and give staff permissions
-        supervisor, created = User.objects.get_or_create(username='supervisor')
-        if created:
-            supervisor.is_staff = True
-            supervisor.password = make_password('123456')
-            supervisor.save()
-
         # Create Employee group if not exists
         employee_group, created = Group.objects.get_or_create(name='Employee')
-
-        # Add supervisor to Employee group
-        supervisor.groups.add(employee_group)
 
         # Create a sample employee user and add to Employee group
         employee, created = User.objects.get_or_create(username='employee')
